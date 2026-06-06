@@ -1,0 +1,215 @@
+import universidad.*
+import profesionales.*
+import provincias.*
+import empresas.*
+import solicitantes.*
+
+
+
+describe "test etapa 1" {
+    const uniSanMartin = new Universidad(provinciaUbicada = buenosAires, honorariosPorHoraSugeridos = 3500)
+    const uniRosario = new Universidad(provinciaUbicada = santaFe, honorariosPorHoraSugeridos = 2800)
+    const uniCorrientes = new Universidad(provinciaUbicada = corrientes, honorariosPorHoraSugeridos = 4200)
+    const uniHurlingham = new Universidad(provinciaUbicada = buenosAires, honorariosPorHoraSugeridos = 8800)
+  
+    const juana = new ProfesionalVinculado(estudioEn = uniRosario)
+    const melina = new ProfesionalAsociado(estudioEn = uniCorrientes)
+    const rocio = new ProfesionalLibre(estudioEn = uniHurlingham, susHonorarios = 5000, susProvinciasHabilitadas = #{santaFe, cordoba, buenosAires})
+    const luciana = new ProfesionalLibre(estudioEn = uniRosario, susHonorarios = 3200, susProvinciasHabilitadas = #{santaFe, entreRios})
+    
+    const gigaEmpresa = new Empresa(honorarioReferencia = 3500)
+
+    method initialize(){
+        gigaEmpresa.contratarEmpleado(juana)
+        gigaEmpresa.contratarEmpleado(melina)
+        gigaEmpresa.contratarEmpleado(rocio)
+        gigaEmpresa.contratarEmpleado(luciana)
+    }
+
+    test "2 de sus profesionales estudiaron en uniRosario" {
+      assert.equals(2, gigaEmpresa.cuantosEmpleadosEstudiaronEn(uniRosario))
+    }
+     test "1 de sus profesionales estudiaron en uniHurlingham" {
+      assert.equals(1, gigaEmpresa.cuantosEmpleadosEstudiaronEn(uniHurlingham))
+    }
+    test "0 de sus profesionales estudiaron en uniSanMartin" {
+      assert.equals(0, gigaEmpresa.cuantosEmpleadosEstudiaronEn(uniSanMartin))
+    }
+
+    test "profesionales caros solo rocio" {
+      assert.equals(#{rocio}, gigaEmpresa.conjuntoProfesionalesCaros())
+    }
+
+    test "universidades formadoras" {
+      assert.equals(#{uniRosario,uniCorrientes,uniHurlingham}, gigaEmpresa.universidadesQueFormaronAEmpleados())
+    }
+    
+    test "profesional mas barato" {
+      assert.equals(juana, gigaEmpresa.profesionalMasBarato())
+    }
+
+    test "es de gente acotada" {
+      assert.equals(true, gigaEmpresa.esDeGenteAcotada())
+    }
+
+    test "no es de gente acotada con luciana sumando 2 provincias" {
+      luciana.agregarProvincia(corrientes)
+      const misones = new Provincia()
+      luciana.agregarProvincia(misones)
+      
+      assert.equals(false, gigaEmpresa.esDeGenteAcotada())
+    }
+}
+
+describe "test etapa 2" {
+    const uniRosario = new Universidad(provinciaUbicada = santaFe, honorariosPorHoraSugeridos = 2800)
+    const uniCorrientes = new Universidad(provinciaUbicada = corrientes, honorariosPorHoraSugeridos = 4200)
+    const uniHurlingham = new Universidad(provinciaUbicada = buenosAires, honorariosPorHoraSugeridos = 8800)
+
+    const jujuy = new Provincia()
+
+    const solicitante1 = new Persona(provinciaDeResidencia = buenosAires)
+    const solicitante2 = new Institucion(universidadesReconocidas = #{uniHurlingham,uniRosario})
+    const solicitante3 = new Club(ubicacionDeSedes = #{jujuy})
+  
+    const juana = new ProfesionalVinculado(estudioEn = uniRosario)
+    const melina = new ProfesionalAsociado(estudioEn = uniCorrientes)
+    const rocio = new ProfesionalLibre(estudioEn = uniHurlingham, susHonorarios = 5000, susProvinciasHabilitadas = #{santaFe, cordoba, buenosAires})
+    const luciana = new ProfesionalLibre(estudioEn = uniRosario, susHonorarios = 3200, susProvinciasHabilitadas = #{santaFe, entreRios})
+    
+    const gigaEmpresa = new Empresa(honorarioReferencia = 3500)
+
+    method initialize(){
+        gigaEmpresa.contratarEmpleado(juana)
+        gigaEmpresa.contratarEmpleado(melina)
+        gigaEmpresa.contratarEmpleado(rocio)
+        gigaEmpresa.contratarEmpleado(luciana)
+    }
+
+  
+  test "gigaEmpresa Puede satisfacer a solicitante 1" {
+    assert.equals(true, gigaEmpresa.puedeSatisfacerA(solicitante1))
+  }
+
+  test "gigaEmpresa puede satisfacer a solicitante 2" {
+    assert.equals(true, gigaEmpresa.puedeSatisfacerA(solicitante2))
+  }
+
+  test "gigaEmpresa puede satisfacer a solicitante 3" {
+    assert.equals(false, gigaEmpresa.puedeSatisfacerA(solicitante3))
+  }
+}
+
+describe "test etapa 3" {
+
+  const uniRosario = new Universidad(provinciaUbicada = santaFe, honorariosPorHoraSugeridos = 2800)
+  const uniCorrientes = new Universidad(provinciaUbicada = corrientes, honorariosPorHoraSugeridos = 4200)
+  const uniHurlingham = new Universidad(provinciaUbicada = buenosAires, honorariosPorHoraSugeridos = 8800)
+  
+  const juana = new ProfesionalVinculado(estudioEn = uniRosario)
+  const melina = new ProfesionalAsociado(estudioEn = uniCorrientes)
+  const rocio = new ProfesionalLibre(estudioEn = uniHurlingham, susHonorarios = 5000, susProvinciasHabilitadas = #{santaFe, cordoba, buenosAires})
+  const luciana = new ProfesionalLibre(estudioEn = uniRosario, susHonorarios = 3200, susProvinciasHabilitadas = #{santaFe, entreRios})
+    
+  const gigaEmpresa = new Empresa(honorarioReferencia = 3500)
+
+  method initialize(){
+    gigaEmpresa.contratarEmpleado(juana)
+    gigaEmpresa.contratarEmpleado(melina)
+    gigaEmpresa.contratarEmpleado(rocio)
+    gigaEmpresa.contratarEmpleado(luciana)
+  }
+
+
+    test "luciana cobra 10000" {
+    luciana.consecuenciaDeCobro(10000)
+    assert.equals(10000, luciana.getDineroAcumulado())
+  }
+  test "melina cobra 25000" {
+    melina.consecuenciaDeCobro(25000)
+    assert.equals(25000, asociacionProfesionalesDeLitoral.getDineroAcumulado())
+  }
+
+  test "juana cobra 3000" {
+    juana.consecuenciaDeCobro(3000)
+    assert.equals(1500, uniRosario.getDineroDonaciones())
+  }
+
+  test "rocio le pasa 10000 a juana" {
+    rocio.consecuenciaDeCobro(10000)
+    rocio.pasarDinero(juana, 10000)
+    assert.equals(5000, uniRosario.getDineroDonaciones())
+  }
+}
+
+describe "test etapa 4" {
+ const uniRosario = new Universidad(provinciaUbicada = santaFe, honorariosPorHoraSugeridos = 2800)
+  const uniCorrientes = new Universidad(provinciaUbicada = corrientes, honorariosPorHoraSugeridos = 4200)
+  const uniHurlingham = new Universidad(provinciaUbicada = buenosAires, honorariosPorHoraSugeridos = 8800)
+
+  const jujuy = new Provincia()
+
+  const solicitante1 = new Persona(provinciaDeResidencia = buenosAires)
+  const solicitante3 = new Club(ubicacionDeSedes = #{jujuy})
+  
+  const juana = new ProfesionalVinculado(estudioEn = uniRosario)
+  const melina = new ProfesionalAsociado(estudioEn = uniCorrientes)
+  const rocio = new ProfesionalLibre(estudioEn = uniHurlingham, susHonorarios = 5000, susProvinciasHabilitadas = #{santaFe, cordoba, buenosAires})
+  const luciana = new ProfesionalLibre(estudioEn = uniRosario, susHonorarios = 3200, susProvinciasHabilitadas = #{santaFe, entreRios})
+    
+  const gigaEmpresa = new Empresa(honorarioReferencia = 3500)
+
+  method initialize(){
+    gigaEmpresa.contratarEmpleado(juana)
+    gigaEmpresa.contratarEmpleado(melina)
+    gigaEmpresa.contratarEmpleado(rocio)
+    gigaEmpresa.contratarEmpleado(luciana)
+  }
+
+  
+  test "dar servicio al solicitante 1" {
+    gigaEmpresa.darServicioA(solicitante1)
+    assert.equals(1, gigaEmpresa.cantidadClientes())
+    assert.equals(true, gigaEmpresa.esCliente(solicitante1))
+  }
+
+  test "dar servicio a solicitante que no puede ser atendido" {
+    gigaEmpresa.darServicioA(solicitante3)
+    assert.equals(0, gigaEmpresa.cantidadClientes())
+    assert.equals(false, gigaEmpresa.esCliente(solicitante1))
+  }
+
+  test "dar servicio 2 veces al mismo solicitante" {
+    gigaEmpresa.darServicioA(solicitante1)
+    gigaEmpresa.darServicioA(solicitante1)
+    assert.equals(1, gigaEmpresa.cantidadClientes())
+  }
+}
+
+describe "desafio Final" {
+  const uniRosario = new Universidad(provinciaUbicada = santaFe, honorariosPorHoraSugeridos = 2800)
+  const uniCorrientes = new Universidad(provinciaUbicada = corrientes, honorariosPorHoraSugeridos = 4200)
+  const uniHurlingham = new Universidad(provinciaUbicada = buenosAires, honorariosPorHoraSugeridos = 8800)
+
+  
+  const juana = new ProfesionalVinculado(estudioEn = uniRosario)
+  const melina = new ProfesionalAsociado(estudioEn = uniCorrientes)
+  const rocio = new ProfesionalLibre(estudioEn = uniHurlingham, susHonorarios = 5000, susProvinciasHabilitadas = #{santaFe})
+  const luciana = new ProfesionalLibre(estudioEn = uniRosario, susHonorarios = 3200, susProvinciasHabilitadas = #{santaFe, entreRios})
+    
+  const gigaEmpresa = new Empresa(honorarioReferencia = 3500)
+
+  method initialize(){
+    gigaEmpresa.contratarEmpleado(juana)
+    gigaEmpresa.contratarEmpleado(melina)
+    gigaEmpresa.contratarEmpleado(luciana)
+  }
+  
+  test "rocio es poco atractiva" {
+    assert.equals(true, gigaEmpresa.profesionalPocoAtractivo(rocio))
+  }
+
+  test "juana no es poco atractivo" {
+    assert.equals(false, gigaEmpresa.profesionalPocoAtractivo(juana))
+  }
+}
